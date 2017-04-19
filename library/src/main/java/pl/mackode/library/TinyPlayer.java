@@ -37,8 +37,16 @@ public class TinyPlayer {
         adaptiveStreaming(true);
     }
 
-    public void openDashUrl(String url) {
-        videoSource.replaceManifestUri(Uri.parse(url));
+    public void openUrl(String url) {
+        if (videoSource == null) {
+            DataSource.Factory dataSourceFactory = new DefaultDataSourceFactory(context, "TinyPlayer");
+            DashChunkSource.Factory dashFactory = new DefaultDashChunkSource.Factory(dataSourceFactory);
+
+            videoSource = new DashMediaSource(Uri.parse(url), dataSourceFactory, dashFactory, null, null);
+            player.prepare(videoSource);
+        } else {
+            videoSource.replaceManifestUri(Uri.parse(url));
+        }
     }
 
     public void play() {
@@ -63,11 +71,6 @@ public class TinyPlayer {
             player = ExoPlayerFactory.newSimpleInstance(context, trackSelector, loadControl);
             player.setVideoSurfaceView(surfaceView);
         }
-
-        DataSource.Factory dataSourceFactory = new DefaultDataSourceFactory(context, "TinyPlayer");
-        DashChunkSource.Factory dashFactory = new DefaultDashChunkSource.Factory(dataSourceFactory);
-        videoSource = new DashMediaSource(Uri.parse(null), dataSourceFactory, dashFactory, null, null);
-        player.prepare(videoSource);
     }
 
 }
