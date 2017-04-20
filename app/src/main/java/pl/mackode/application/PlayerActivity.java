@@ -61,4 +61,16 @@ public class PlayerActivity extends AppCompatActivity {
         paused = !paused;
     }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        player.pause();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        player.play();
+    }
+
 }
